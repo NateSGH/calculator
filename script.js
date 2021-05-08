@@ -4,32 +4,45 @@ const operatorBtns = document.querySelectorAll(".operator");
 const clearBtn = document.querySelector(".clear");
 const equalsBtn = document.querySelector(".equals");
 
-let digit = "";
+let inputNum = "";
 let operator = "";
+let number = 0;
 
 digitBtns.forEach((digitBtn) => {
   digitBtn.addEventListener("click", () => {
-    digit += digitBtn.textContent;
-    displayText.textContent = digit;
+    inputNum += digitBtn.textContent;
+    if (operator !== "") {
+      displayText.textContent = `${number} ${operator} ${inputNum}`;
+    } else displayText.textContent = inputNum;
   });
 });
 
 operatorBtns.forEach((operatorBtn) => {
   operatorBtn.addEventListener("click", () => {
+    let currentOperator = operator;
     operator = operatorBtn.textContent;
-    displayText.textContent += ` ${operator}`;
+    if (currentOperator === "") {
+      number = Number(inputNum);
+      inputNum = "";
+    }
+    displayText.textContent = `${number} ${operator}`;
   });
 });
 
 clearBtn.addEventListener("click", () => {
   displayText.textContent = "";
-  digit = "";
+  inputNum = "";
   operator = "";
+  number = 0;
 });
 
 equalsBtn.addEventListener("click", () => {
-  if (digit !== "" && operator !== "") {
-    operate(operator, Number(digit), Number(digit));
+  if (inputNum !== "" && operator !== "" && inputNum !== 0) {
+    let secondNum = Number(inputNum);
+    operate(operator, number, secondNum);
+    inputNum = "";
+    operator = "";
+    number = 0;
   }
 });
 
@@ -58,10 +71,10 @@ function operate(operator, numA, numB) {
     case "-":
       result = substract(numA, numB);
       break;
-    case "*":
+    case "×":
       result = multiply(numA, numB);
       break;
-    case ":":
+    case "÷":
       result = divide(numA, numB);
       break;
     default:
