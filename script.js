@@ -8,6 +8,12 @@ let inputNum = "";
 let operator = "";
 let number = 0;
 
+function resetAllVals() {
+  inputNum = "";
+  operator = "";
+  number = 0;
+}
+
 digitBtns.forEach((digitBtn) => {
   digitBtn.addEventListener("click", () => {
     inputNum += digitBtn.textContent;
@@ -19,30 +25,40 @@ digitBtns.forEach((digitBtn) => {
 
 operatorBtns.forEach((operatorBtn) => {
   operatorBtn.addEventListener("click", () => {
-    let currentOperator = operator;
-    operator = operatorBtn.textContent;
-    if (currentOperator === "") {
+    // let currentOperator = operator;
+    if (!number) {
+      // start
       number = Number(inputNum);
       inputNum = "";
+      operator = operatorBtn.textContent;
+      displayText.textContent = `${number} ${operator}`;
+    } else if (inputNum !== "") {
+      // second and other operators
+      let secondNum = Number(inputNum);
+      secondNum = operate(operator, number, secondNum);
+      resetAllVals();
+      operator = operatorBtn.textContent;
+      number = secondNum;
+      displayText.textContent = `${number} ${operator}`;
+    } else {
+      // after "equals" pressed
+      operator = operatorBtn.textContent;
+      displayText.textContent = `${number} ${operator}`;
     }
-    displayText.textContent = `${number} ${operator}`;
   });
 });
 
 clearBtn.addEventListener("click", () => {
   displayText.textContent = "";
-  inputNum = "";
-  operator = "";
-  number = 0;
+  resetAllVals();
 });
 
 equalsBtn.addEventListener("click", () => {
   if (inputNum !== "" && operator !== "" && inputNum !== 0) {
     let secondNum = Number(inputNum);
-    operate(operator, number, secondNum);
-    inputNum = "";
-    operator = "";
-    number = 0;
+    secondNum = operate(operator, number, secondNum);
+    resetAllVals();
+    number = secondNum;
   }
 });
 
@@ -81,4 +97,5 @@ function operate(operator, numA, numB) {
       break;
   }
   displayText.textContent = result;
+  return result;
 }
