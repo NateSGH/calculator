@@ -13,7 +13,7 @@ body {
   grid-template-rows: auto auto 200px; /*repeat(3, auto);*/
   grid-template-areas:
     "display display"
-    ".  clear"
+    "backspace  clear"
     "btns btns";
   row-gap: 15px;
   border: 1px solid black;
@@ -32,10 +32,18 @@ body {
   padding-right: 10px;
 }
 
+.backspace {
+  grid-area: backspace;
+  height: 35px;
+  width: 100px;
+  justify-self: center;
+}
+
 .clear {
   grid-area: clear;
   height: 35px;
-  width: auto;
+  width: 100px;
+  justify-self: center;
 }
 
 .main-buttons {
