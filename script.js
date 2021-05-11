@@ -16,10 +16,10 @@ function resetAllVals() {
   number = 0;
   pointBtn.disabled = false;
 }
-// TODO: finish
-// bkspBtn.addEventListener("click", () => {
-//   displayText.textContent = displayText.textContent.slice(0, -1);
-// });
+
+bkspBtn.addEventListener("click", () => {
+  // displayText.textContent = displayText.textContent.slice(0, -1);
+});
 
 pointBtn.addEventListener("click", () => {
   pointInput();
@@ -38,7 +38,6 @@ operatorBtns.forEach((operatorBtn) => {
 });
 
 clearBtn.addEventListener("click", () => {
-  console.log("Clear");
   displayText.textContent = "0";
   resetAllVals();
 });
@@ -93,13 +92,13 @@ function operatorInput(operatorVal) {
 
 function pointInput() {
   // if (inputNum !== "" && !inputNum.includes("."))
-  if (inputNum == "") {
+  if (inputNum == "" && !inputNum.includes(".")) {
     // after equals to dial a new number
     if (operator === "" && number) {
       resetAllVals();
     }
     inputNum += "0.";
-  } else inputNum += ".";
+  } else if (!inputNum.includes(".")) inputNum += ".";
   pointBtn.disabled = true;
   if (operator !== "") {
     displayText.textContent = `${number} ${operator} ${inputNum}`;
@@ -116,6 +115,8 @@ function equals() {
     return number;
   }
 }
+
+function backspace() {}
 
 function add(a, b) {
   return a + b;
