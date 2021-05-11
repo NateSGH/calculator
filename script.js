@@ -14,6 +14,7 @@ function resetAllVals() {
   inputNum = "";
   operator = "";
   number = 0;
+  pointBtn.disabled = false;
 }
 // TODO: finish
 // bkspBtn.addEventListener("click", () => {
@@ -37,7 +38,8 @@ operatorBtns.forEach((operatorBtn) => {
 });
 
 clearBtn.addEventListener("click", () => {
-  displayText.textContent = "";
+  console.log("Clear");
+  displayText.textContent = "0";
   resetAllVals();
 });
 
@@ -45,32 +47,22 @@ equalsBtn.addEventListener("click", () => {
   equals();
 });
 
-function pointInput() {
-  if (inputNum !== "" && !inputNum.includes(".")) {
-    inputNum += ".";
-
-    if (operator !== "") {
-      displayText.textContent = `${number} ${operator} ${inputNum}`;
-    } else displayText.textContent = inputNum;
-  }
-}
-
-function equals() {
-  console.log(`${number} ${operator} ${inputNum}`);
-  if (inputNum !== "" && operator !== "" && inputNum !== 0) {
-    let secondNum = Number(inputNum);
-    secondNum = operate(operator, number, secondNum);
-    resetAllVals();
-    number = secondNum;
-    return number;
-  }
-}
-
 function numInput(digit) {
-  inputNum += digit;
-  if (inputNum.includes(".")) {
-    inputNum = inputNum.slice(0, inputNum.indexOf(".") + 2);
+  // after equals to dial a new number
+  if (operator === "" && number) {
+    resetAllVals();
   }
+
+  inputNum += digit;
+  // remove zeros in the beginning of num
+  if (
+    inputNum.length > 1 &&
+    inputNum.charAt(0) === "0" &&
+    inputNum.charAt(1) !== "."
+  ) {
+    inputNum = inputNum.slice(1);
+  }
+
   if (operator !== "") {
     displayText.textContent = `${number} ${operator} ${inputNum}`;
   } else displayText.textContent = inputNum;
@@ -95,6 +87,33 @@ function operatorInput(operatorVal) {
     // after "equals" pressed
     operator = operatorVal;
     displayText.textContent = `${number} ${operator}`;
+  }
+  pointBtn.disabled = false;
+}
+
+function pointInput() {
+  // if (inputNum !== "" && !inputNum.includes("."))
+  if (inputNum == "") {
+    // after equals to dial a new number
+    if (operator === "" && number) {
+      resetAllVals();
+    }
+    inputNum += "0.";
+  } else inputNum += ".";
+  pointBtn.disabled = true;
+  if (operator !== "") {
+    displayText.textContent = `${number} ${operator} ${inputNum}`;
+  } else displayText.textContent = inputNum;
+}
+
+function equals() {
+  console.log(`${number} ${operator} ${inputNum}`);
+  if (inputNum !== "" && operator !== "" && inputNum !== 0) {
+    let secondNum = Number(inputNum);
+    secondNum = operate(operator, number, secondNum);
+    resetAllVals();
+    number = secondNum;
+    return number;
   }
 }
 
@@ -135,8 +154,12 @@ function operate(operator, numA, numB) {
     default:
       break;
   }
+  //  round answers with long decimals so that they don’t overflow the screen
   if (!Number.isInteger(result)) {
-    result = Number(result.toFixed(2));
+    let str = result.toString();
+    if (str.slice(str.indexOf(".") + 1).length >= 20) {
+      result = Number(result.toFixed(22));
+    }
   }
   console.log(`Operate Result - ${result} type ${typeof result}`);
   displayText.textContent = result;
@@ -160,42 +183,6 @@ window.addEventListener("keydown", (e) => {
     !Number.isNaN(Number(e.code.slice(-1)))
   ) {
     numInput(e.key);
-    // let operatorFlag = false;
-    // let operatorTemp = "";
-
-    // switch (e.key) {
-    //   case "+":
-    //     operatorFlag = true;
-    //     operatorTemp = e.key;
-    //     break;
-    //   case "-":
-    //     operatorFlag = true;
-    //     operatorTemp = e.key;
-    //     break;
-    //   case "/":
-    //     operatorFlag = true;
-    //     operatorTemp = "÷";
-    //     break;
-    //   case "*":
-    //     operatorFlag = true;
-    //     operatorTemp = "×";
-    //     break;
-    //   case "Enter":
-    //     break;
-    //   default:
-    //     break;
-    // }
-
-    // if (operatorFlag) {
-    //   operatorInput(operatorTemp);
-    //   operatorFlag = false;
-    //   // } else if (e.code.includes("NumpadEnter")) {
-    //   // equals();
-    // } else if (e.key === ".") {
-    //   pointInput();
-    // } else {
-    //   numInput(e.key);
-    // }
   } else if (e.key === ".") {
     pointInput();
   } else {

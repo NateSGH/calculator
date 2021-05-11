@@ -45,7 +45,6 @@ body {
   width: 100px;
   justify-self: center;
 }
-
 .main-buttons {
   grid-area: btns;
   display: grid;
@@ -53,4 +52,13 @@ body {
   grid-template-rows: repeat(4, auto);
   column-gap: 7px;
   row-gap: 7px;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button:disabled {
+  background-color: var(--line-border-empty);
+  cursor: not-allowed;
 }
