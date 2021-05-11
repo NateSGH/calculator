@@ -23,27 +23,33 @@ bkspBtn.addEventListener("click", () => {
 
 pointBtn.addEventListener("click", () => {
   pointInput();
+  console.log("point");
 });
 
 digitBtns.forEach((digitBtn) => {
   digitBtn.addEventListener("click", () => {
     numInput(digitBtn.textContent);
+    digitBtn.blur();
   });
 });
 
 operatorBtns.forEach((operatorBtn) => {
   operatorBtn.addEventListener("click", () => {
     operatorInput(operatorBtn.textContent);
+    operatorBtn.blur();
   });
 });
 
 clearBtn.addEventListener("click", () => {
+  console.log("Clear");
   displayText.textContent = "0";
   resetAllVals();
+  clearBtn.blur();
 });
 
 equalsBtn.addEventListener("click", () => {
   equals();
+  equalsBtn.blur();
 });
 
 function numInput(digit) {
